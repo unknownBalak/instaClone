@@ -19,8 +19,8 @@ function Signup() {
       },
       body: JSON.stringify({
         name,
-        password,
         email,
+        password,
       }),
     })
       .then((res) => res.json())
@@ -32,12 +32,8 @@ function Signup() {
           history.push("/login");
         }
       })
-      .catch((err) => console.log(err));
+      .catch((err) => console.log("got an error", err));
 
-
-
-
-      
     setName("");
     setEmail("");
     setPassword("");

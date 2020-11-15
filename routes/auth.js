@@ -7,8 +7,9 @@ const router = express.Router();
 const { JWT_Token } = secretPlace;
 
 router.post("/signup", (req, res) => {
-  const { email, password } = req.body;
-  if (!email || !password) {
+  const { email, password, name } = req.body;
+  console.log("in auth.js", req.body);
+  if (!name || !email || !password) {
     res.status(422).json({ error: "please fill of the data!!" });
   }
   schema.findOne({ email: email }).then((userdata) => {

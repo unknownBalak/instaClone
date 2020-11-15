@@ -4,7 +4,7 @@ import secretPlace from "./config/key.js";
 const app = express();
 import auth from "./routes/auth.js";
 import post from "./routes/post.js";
-import path from 'path'
+import path from "path";
 
 const port = process.env.PORT || 3000;
 
@@ -28,11 +28,10 @@ mongoose.connect(
 app.use(auth);
 app.use(post);
 
-
-if(process.env.NODE_ENV==="production"){
-  app.use(express.static('client/build'))
-     app.get("*", (req,res)=> {
-       res.sendFile(path.resolve(__dirname,'client','build','index.html'));
-     })  
+if (process.env.NODE_ENV === "production") {
+  app.use(express.static("client/build"));
+  app.get("*", (req, res) => {
+    res.sendFile(path.resolve(__dirname, "client", "build", "index.html"));
+  });
 }
 app.listen(port, console.log(`server is running at ${port}.....`));
