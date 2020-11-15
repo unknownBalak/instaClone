@@ -1,0 +1,8 @@
+.nav-wrapper {
+  background-color: white;
+  box-shadow: 0 5px 10px 2px grey;
+}
+
+.nav-wrapper a {
+  color: black;
+}

@@ -1,0 +1,12 @@
+.card {
+  box-shadow: 0 5px 5px 4px grey;
+}
+.card > h1 {
+  text-align: center;
+}
+form {
+  padding: 20px;
+}
+.btn {
+  text-align: center;
+}
