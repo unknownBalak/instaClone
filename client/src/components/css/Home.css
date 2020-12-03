@@ -1,11 +1,12 @@
 .container1 {
-  width: 430px;
+  width: 50%;
   margin: auto;
   border: 1px solid;
   box-shadow: 1px 5px 5px 5px grey;
   margin-top: 30px;
   margin-bottom: 30px;
 }
+
 .home {
   margin-top: 30px;
   display: flex;
@@ -26,9 +27,13 @@
 }
 .follwoing__post > img {
   align-items: center;
-  margin-left: 2.4%;
+  width: 100%;
 }
 .img__description {
   padding: 10px;
   line-height: 0.2;
+}
+.thumb_down,
+.thumb_up {
+  cursor: pointer;
 }

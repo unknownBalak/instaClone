@@ -4,12 +4,13 @@ import requireLogin from "../middleware/requireLogin.js";
 
 const router = express.Router();
 
-router.get("/allpost", (req, res) => {
+router.get("/allpost", requireLogin, (req, res) => {
   post
     .find()
-    .populate("postBy", "_id, name")
+    .populate("postBy", "_id name")
+    .populate("comments.postBy", "_id, name")
     .then((posts) => {
-      res.status(400).json({ posts });
+      res.status(200).json({ posts });
     })
     .catch((err) => console.log(err));
 });
@@ -31,7 +32,7 @@ router.post("/createpost", requireLogin, (req, res) => {
   });
   userpost
     .save()
-    .then((result) => res.status(200).json({ post: result }))
+    .then((result) => res.status(200).json({ post: `I got this,  ${result}` }))
     .catch((err) => console.log(err));
 });
 
@@ -42,4 +43,75 @@ router.get("/mypost", requireLogin, (req, res) => {
     .then((mypost) => res.status(400).json({ mypost }))
     .catch((error) => console.log(error));
 });
+
+router.put("/dislike", requireLogin, (req, res) => {
+  post
+    .findByIdAndUpdate(
+      req.body.postId,
+      {
+        $pull: { likes: req.user._id },
+      },
+      {
+        new: true,
+      }
+    )
+    .populate("comments.postBy", "_id name")
+    .populate("postBy", "_id name")
+    .exec((err, result) => {
+      if (err) {
+        return res.status(422).json({ error: err });
+      } else {
+        res.json(result);
+      }
+    });
+});
+
+router.put("/like", requireLogin, (req, res) => {
+  post
+    .findByIdAndUpdate(
+      req.body.postId,
+      {
+        $push: { likes: req.user._id },
+      },
+      {
+        new: true,
+      }
+    )
+    .populate("comments.postBy", "_id name")
+    .populate("postBy", "_id name")
+    .exec((err, result) => {
+      if (err) {
+        return res.status(422).json({ error: err });
+      } else {
+        res.json(result);
+      }
+    });
+});
+
+router.put("/comment", requireLogin, (req, res) => {
+  const comment = {
+    text: req.body.text,
+    postBy: req.user._id,
+  };
+  post
+    .findByIdAndUpdate(
+      req.body.postId,
+      {
+        $push: { comments: comment },
+      },
+      {
+        new: true,
+      }
+    )
+    .populate("comments.postBy", "_id name")
+    .populate("postBy", "_id name")
+    .exec((err, result) => {
+      if (err) {
+        return res.status(422).json({ error: err });
+      } else {
+        res.json(result);
+      }
+    });
+});
+
 export default router;

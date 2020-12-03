@@ -8,25 +8,37 @@ function CreatePost() {
   const [url, setUrl] = useState("");
   const history = useHistory();
 
-  const postDetails = (e) => {
-    const data = new FormData();
-    // console.log(image);
-    data.append("file", image);
-    data.append("upload_preset", "insta-clone");
-    data.append("cloud_name", "my-media");
-    fetch("https://api.cloudinary.com/v1_1/my-media/image/upload", {
-      method: "post",
-      body: data,
-    })
-      .then((res) => res.json())
-      .then((result) => {
-        // console.log(result);
-
-        setUrl(result.url);
+  function fetchData() {
+    return new Promise((resolve, reject) => {
+      const Data = new FormData();
+      Data.append("file", image);
+      Data.append("upload_preset", "insta-clone");
+      Data.append("cloud_name", "my-media");
+      fetch("https://api.cloudinary.com/v1_1/my-media/image/upload", {
+        method: "post",
+        body: Data,
       })
-      .catch((err) => {
-        console.log(err);
-      });
+        .then((res) => res.json())
+        .then((data) => {
+          if (data) resolve(data);
+        });
+    });
+  }
+
+  async function postDetails(e) {
+    e.preventDefault();
+    try {
+      let fetchdata = await fetchData();
+      // console.log(fetchdata.url);
+      //
+      if (fetchdata) {
+        setUrl(fetchdata.url);
+      } else {
+        console.log(fetchdata.error);
+      }
+    } catch (error) {
+      console.log(error);
+    }
 
     fetch("/createpost", {
       method: "post",
@@ -50,15 +62,7 @@ function CreatePost() {
         }
       })
       .catch((err) => console.log(err));
-
-    console.log(url);
-
-    setTitle("");
-    setBody("");
-    setUrl("");
-
-    e.preventDefault();
-  };
+  }
 
   return (
     <div className="container">

@@ -5,11 +5,12 @@ const app = express();
 import auth from "./routes/auth.js";
 import post from "./routes/post.js";
 import path from "path";
+import cors from "cors";
 
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 3001;
 
 //middle ware
-
+app.use(cors());
 app.use(express.json());
 const { url } = secretPlace;
 //db connection;

@@ -7,10 +7,11 @@ function Signup() {
   const [email, setEmail] = useState([""]);
   const [name, setName] = useState([""]);
   const [password, setPassword] = useState([""]);
+  const [username, setUsername] = useState([""]);
   const history = useHistory();
 
   const handleSubmit = (data) => {
-    alert(`email is ${email} and name is ${name}`);
+    // alert(`email is ${email} and name is ${name}`);
 
     fetch("/signup", {
       method: "post",
@@ -21,6 +22,7 @@ function Signup() {
         name,
         email,
         password,
+        username,
       }),
     })
       .then((res) => res.json())
@@ -31,8 +33,7 @@ function Signup() {
           M.toast({ html: data.message, classes: "#00e676 green accent-3" });
           history.push("/login");
         }
-      })
-      .catch((err) => console.log("got an error", err));
+      });
 
     setName("");
     setEmail("");
@@ -55,6 +56,7 @@ function Signup() {
             Email
             <input value={email} onChange={(e) => setEmail(e.target.value)} type="text" />
           </label>
+
           <label>
             Password
             <input
@@ -64,6 +66,10 @@ function Signup() {
               }}
               type="text"
             />
+            <label>
+              UserName
+              <input value={username} onChange={(e) => setUsername(e.target.value)} type="text" />
+            </label>
           </label>
           <button
             className="btn btn-primary"

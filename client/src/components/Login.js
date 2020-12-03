@@ -1,13 +1,19 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { Link, useHistory } from "react-router-dom";
 import "./css/Login.css";
 import M from "materialize-css";
+import { userContext } from "../App";
+
 function Login() {
+  const { state, dispatch } = useContext(userContext);
   const [email, setEmail] = useState([""]);
   const [password, setPassword] = useState([""]);
   const history = useHistory();
 
   const handleSubmit = (data) => {
+    data.preventDefault();
+
+    // console.log(email, password);
     fetch("/signin", {
       method: "post",
       headers: {
@@ -20,22 +26,28 @@ function Login() {
     })
       .then((res) => res.json())
       .then((data) => {
-        console.log(data);
         if (data.error) {
           M.toast({ html: data.error, classes: "#d50000 red accent-4" });
         } else {
-          console.log(data.token);
+          // console.log(data);
+          // console.log(data.token);
           localStorage.setItem("userToken", data.token);
-          localStorage.setItem("userId", data._id);
+          localStorage.setItem("user", JSON.stringify(data.user));
+          // console.log(data.user);
+
+          dispatch({ type: "USER", payload: data.user });
+
           M.toast({ html: "LoggedIn successfully!!", classes: "#00e676 green accent-3" });
           history.push("/");
         }
       })
-      .catch((err) => console.log(err));
+      .catch((error) => {
+        console.log(error);
+        M.toast({ html: error, classes: "#d50000 red accent-4" });
+      });
 
     setEmail("");
     setPassword("");
-    data.preventDefault();
   };
   return (
     <div className="container">
@@ -53,7 +65,7 @@ function Login() {
               onChange={(e) => {
                 setPassword(e.target.value);
               }}
-              type="text"
+              type="password"
             />
           </label>
           <button

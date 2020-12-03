@@ -7,7 +7,7 @@ const router = express.Router();
 const { JWT_Token } = secretPlace;
 
 router.post("/signup", (req, res) => {
-  const { email, password, name } = req.body;
+  const { email, password, name, username } = req.body;
   console.log("in auth.js", req.body);
   if (!name || !email || !password) {
     res.status(422).json({ error: "please fill of the data!!" });
@@ -22,6 +22,7 @@ router.post("/signup", (req, res) => {
             name,
             email,
             password: new_password,
+            username,
           });
           user
             .save()
@@ -33,8 +34,9 @@ router.post("/signup", (req, res) => {
 
 router.post("/signin", (req, res) => {
   const { email, password } = req.body;
+
   if (!email || !password) {
-    json.status(422).json({ error: "please Insert Userid or password!!" });
+    res.status(422).json({ error: "please Insert Userid or password!!" });
   }
   schema
     .findOne({ email: email })
@@ -42,10 +44,12 @@ router.post("/signin", (req, res) => {
       savedUser
         ? bcrypt.compare(password, savedUser.password).then((doMatch) => {
             if (doMatch) {
-              // res.json({ message: "successfully signed in" });
+              console.log(savedUser);
               const token = jwt.sign({ _id: savedUser._id }, JWT_Token);
-              const { _id, name, email } = savedUser;
-              res.json({ token, user: { _id, name, email } });
+              console.log(token);
+              const { _id, name, email, username } = savedUser;
+              res.json({ token, user: { _id, name, email, username } });
+              res.json({ message: "successfully signed in" });
             } else {
               return res.status(422).json({ error: "Invalid Email or Password!!" });
             }

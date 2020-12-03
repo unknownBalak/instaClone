@@ -28,7 +28,11 @@
   display: block;
   border-top: 1px solid;
 }
+
 .user__posts > img {
   margin: 10px;
   justify-content: space-between;
+  width: 150px !important;
+  height: 150px !important;
+  
 }
